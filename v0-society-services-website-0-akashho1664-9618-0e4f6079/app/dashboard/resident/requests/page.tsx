@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Fragment } from "react"
 import { Search, Filter } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -26,9 +26,17 @@ import { Progress } from "@/components/ui/progress"
 import { serviceRequests } from "@/lib/mock-data"
 import type { RequestStatus } from "@/lib/types"
 
-const myRequests = serviceRequests.filter((r) => r.residentName === "Rajesh Sharma")
+const myRequests = serviceRequests.filter(
+  (r) => r.residentName === "Rajesh Sharma"
+)
 
-const statusSteps: RequestStatus[] = ["pending", "approved", "assigned", "in-progress", "completed"]
+const statusSteps: RequestStatus[] = [
+  "pending",
+  "approved",
+  "assigned",
+  "in-progress",
+  "completed",
+]
 
 function getProgress(status: RequestStatus) {
   if (status === "cancelled") return 0
@@ -42,9 +50,13 @@ export default function RequestsPage() {
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const filtered = myRequests.filter((r) => {
-    const matchSearch = r.serviceName.toLowerCase().includes(search.toLowerCase()) ||
+    const matchSearch =
+      r.serviceName.toLowerCase().includes(search.toLowerCase()) ||
       r.description.toLowerCase().includes(search.toLowerCase())
-    const matchStatus = statusFilter === "all" || r.status === statusFilter
+
+    const matchStatus =
+      statusFilter === "all" || r.status === statusFilter
+
     return matchSearch && matchStatus
   })
 
@@ -52,15 +64,25 @@ export default function RequestsPage() {
     <PageTransition>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">My Requests</h1>
-          <p className="text-muted-foreground">Track and manage your service requests.</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            My Requests
+          </h1>
+          <p className="text-muted-foreground">
+            Track and manage your service requests.
+          </p>
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search requests..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-8" />
+            <Input
+              placeholder="Search requests..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-8"
+            />
           </div>
+
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-full sm:w-48">
               <Filter className="mr-2 size-4" />
@@ -80,8 +102,11 @@ export default function RequestsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Service Requests ({filtered.length})</CardTitle>
+            <CardTitle className="text-base">
+              Service Requests ({filtered.length})
+            </CardTitle>
           </CardHeader>
+
           <CardContent>
             <div className="overflow-x-auto">
               <Table>
@@ -95,39 +120,99 @@ export default function RequestsPage() {
                     <TableHead>Action</TableHead>
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
                   {filtered.map((req) => (
-                    <>
-                      <TableRow key={req.id} className="cursor-pointer" onClick={() => setExpanded(expanded === req.id ? null : req.id)}>
-                        <TableCell className="font-medium">{req.serviceName}</TableCell>
-                        <TableCell className="max-w-[200px] truncate text-muted-foreground">{req.description}</TableCell>
-                        <TableCell className="text-muted-foreground">{req.createdAt}</TableCell>
-                        <TableCell><PriorityBadge priority={req.priority} /></TableCell>
-                        <TableCell><StatusBadge status={req.status} /></TableCell>
+                    <Fragment key={req.id}>
+                      <TableRow
+                        className="cursor-pointer"
+                        onClick={() =>
+                          setExpanded(
+                            expanded === req.id ? null : req.id
+                          )
+                        }
+                      >
+                        <TableCell className="font-medium">
+                          {req.serviceName}
+                        </TableCell>
+                        <TableCell className="max-w-[200px] truncate text-muted-foreground">
+                          {req.description}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {req.createdAt}
+                        </TableCell>
+                        <TableCell>
+                          <PriorityBadge priority={req.priority} />
+                        </TableCell>
+                        <TableCell>
+                          <StatusBadge status={req.status} />
+                        </TableCell>
                         <TableCell>
                           <Button variant="ghost" size="sm">
-                            {expanded === req.id ? "Collapse" : "Details"}
+                            {expanded === req.id
+                              ? "Collapse"
+                              : "Details"}
                           </Button>
                         </TableCell>
                       </TableRow>
+
                       {expanded === req.id && (
-                        <TableRow key={`${req.id}-detail`}>
-                          <TableCell colSpan={6} className="bg-muted/30">
+                        <TableRow>
+                          <TableCell
+                            colSpan={6}
+                            className="bg-muted/30"
+                          >
                             <div className="space-y-4 p-2">
-                              <p className="text-sm"><span className="font-medium">Full Description:</span> {req.description}</p>
+                              <p className="text-sm">
+                                <span className="font-medium">
+                                  Full Description:
+                                </span>{" "}
+                                {req.description}
+                              </p>
+
                               {req.assignedStaff && (
-                                <p className="text-sm"><span className="font-medium">Assigned To:</span> {req.assignedStaff}</p>
+                                <p className="text-sm">
+                                  <span className="font-medium">
+                                    Assigned To:
+                                  </span>{" "}
+                                  {req.assignedStaff}
+                                </p>
                               )}
+
                               {req.scheduledDate && (
-                                <p className="text-sm"><span className="font-medium">Scheduled:</span> {req.scheduledDate}</p>
+                                <p className="text-sm">
+                                  <span className="font-medium">
+                                    Scheduled:
+                                  </span>{" "}
+                                  {req.scheduledDate}
+                                </p>
                               )}
+
                               <div className="space-y-2">
-                                <p className="text-sm font-medium">Progress</p>
-                                <Progress value={getProgress(req.status)} className="h-2" />
+                                <p className="text-sm font-medium">
+                                  Progress
+                                </p>
+
+                                <Progress
+                                  value={getProgress(req.status)}
+                                  className="h-2"
+                                />
+
                                 <div className="flex justify-between text-xs text-muted-foreground">
                                   {statusSteps.map((s) => (
-                                    <span key={s} className={statusSteps.indexOf(s) <= statusSteps.indexOf(req.status) ? "text-primary font-medium" : ""}>
-                                      {s.charAt(0).toUpperCase() + s.slice(1).replace("-", " ")}
+                                    <span
+                                      key={s}
+                                      className={
+                                        statusSteps.indexOf(s) <=
+                                        statusSteps.indexOf(req.status)
+                                          ? "text-primary font-medium"
+                                          : ""
+                                      }
+                                    >
+                                      {s
+                                        .charAt(0)
+                                        .toUpperCase() +
+                                        s.slice(1).replace("-", " ")}
                                     </span>
                                   ))}
                                 </div>
@@ -136,13 +221,16 @@ export default function RequestsPage() {
                           </TableCell>
                         </TableRow>
                       )}
-                    </>
+                    </Fragment>
                   ))}
                 </TableBody>
               </Table>
             </div>
+
             {filtered.length === 0 && (
-              <div className="py-8 text-center text-muted-foreground">No requests found.</div>
+              <div className="py-8 text-center text-muted-foreground">
+                No requests found.
+              </div>
             )}
           </CardContent>
         </Card>
