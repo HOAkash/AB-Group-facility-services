@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Building2,
   Menu,
   X,
   MessageCircle
@@ -19,7 +19,6 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
 ]
 
-// 🔹 Replace with your real WhatsApp number
 const whatsappLink =
   "https://wa.me/9036954451?text=Hi%20AB%20Group,%20I%20would%20like%20to%20know%20more%20about%20your%20facility%20services."
 
@@ -29,11 +28,19 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/20 backdrop-blur-lg">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:px-8">
-        
+
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex size-9 items-center justify-center rounded-lg bg-primary">
-            <Building2 className="size-5 text-primary-foreground" />
+          {/* Logo image replaces the Building2 icon */}
+          <div className="flex size-9 items-center justify-center overflow-hidden rounded-lg">
+            <Image
+              src="/images/logoAB.png"
+              alt="AB Group Logo"
+              width={36}
+              height={36}
+              className="h-full w-full object-contain"
+              priority
+            />
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-bold leading-tight tracking-tight">
@@ -62,12 +69,7 @@ export function Navbar() {
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
 
-          {/* WhatsApp Button */}
-          <a
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
             <Button
               size="sm"
               className="gap-2 bg-[#25D366] text-white hover:bg-[#1ebe5d]"
@@ -78,9 +80,7 @@ export function Navbar() {
           </a>
 
           <Link href="/login">
-            <Button variant="ghost" size="sm">
-              Sign In
-            </Button>
+            <Button variant="ghost" size="sm">Sign In</Button>
           </Link>
 
           <Link href="/login">
@@ -96,11 +96,7 @@ export function Navbar() {
             size="icon"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {mobileOpen ? (
-              <X className="size-5" />
-            ) : (
-              <Menu className="size-5" />
-            )}
+            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </Button>
         </div>
       </div>
@@ -116,7 +112,6 @@ export function Navbar() {
             className="overflow-hidden border-t md:hidden"
           >
             <div className="flex flex-col gap-1 p-4">
-              
               {navLinks.map((link) => (
                 <a
                   key={link.label}
@@ -129,8 +124,6 @@ export function Navbar() {
               ))}
 
               <div className="mt-3 flex flex-col gap-2">
-
-                {/* WhatsApp Mobile */}
                 <a
                   href={whatsappLink}
                   target="_blank"
@@ -146,28 +139,15 @@ export function Navbar() {
                   </Button>
                 </a>
 
-                <Link
-                  href="/login"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    size="sm"
-                  >
+                <Link href="/login" onClick={() => setMobileOpen(false)}>
+                  <Button variant="outline" className="w-full" size="sm">
                     Sign In
                   </Button>
                 </Link>
 
-                <Link
-                  href="/login"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <Button className="w-full" size="sm">
-                    Get Started
-                  </Button>
+                <Link href="/login" onClick={() => setMobileOpen(false)}>
+                  <Button className="w-full" size="sm">Get Started</Button>
                 </Link>
-
               </div>
             </div>
           </motion.div>
